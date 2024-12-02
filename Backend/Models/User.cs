@@ -18,6 +18,6 @@ namespace NoteCode.Models
 
         public string? ImageProfile {get; set;}
 
-        public bool IsAdmin { get; set; } = false;
+        public string? Role { get; set; } = "user";
     }
 }

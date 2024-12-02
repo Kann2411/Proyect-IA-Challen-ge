@@ -10,36 +10,28 @@ namespace NoteCode.Repositories
     public interface IUserRepository
     {
         Task<User> GetByEmail(string email);
-        Task Add(User user, bool isAdmin = false);
+        Task Add(User user, string role);
 
         Task<User[]> GetAllUsers();
     }
-    public class UserRepository : IUserRepository
+    public class UserRepository(AppDbContext context) : IUserRepository
     {
-        private readonly AppDbContext _context;
-
-        public UserRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<User[]> GetAllUsers()
         {
-            return await _context.Users.ToArrayAsync();
+            return await context.Users.ToArrayAsync();
         }
 
         public async Task<User> GetByEmail(string email)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            
-            return user;
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return user ?? throw new NotFoundException($"User with email {email} not found");
         }
 
-        public async Task Add(User user, bool isAdmin)
+        public async Task Add(User user, string role)
         {
-            user.IsAdmin = isAdmin;
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            user.Role = role;
+            await context.Users.AddAsync(user);
+            await context.SaveChangesAsync();
         }
     }
 }
