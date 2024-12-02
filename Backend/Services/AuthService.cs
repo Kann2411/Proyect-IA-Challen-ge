@@ -1,5 +1,8 @@
+using Microsoft.IdentityModel.Tokens;
 using NoteCode.Models;
 using NoteCode.Repositories;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,7 +10,7 @@ namespace NoteCode.Services
 {
     public interface IAuthService
     {
-        Task<bool> Login(string email, string password);
+        Task<string> Login(UserSignInModel model);
         Task<bool> SignUp(UserSignUpModel model);
     }
 
@@ -19,13 +22,37 @@ namespace NoteCode.Services
         {
             _userRepository = userRepository;
         }
-        public async Task<bool> Login(string email, string password)
+        public async Task<string> Login(UserSignInModel model)
         {
-            var user =  await _userRepository.GetByEmail(email);
-            if (user == null) return false;
+            var user = await _userRepository.GetByEmail(model.Email);
+            if (user == null)
+            {
+                throw new NotFoundException("User not found");
+            }
+            var passwordHash = HashPassword(model.Password);
+            if (passwordHash != user.PasswordHash)
+            {
+                throw new UnauthorizedAccessException("Invalid password");
+            }
+            var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim("IsAdmin", user.IsAdmin.ToString())
+        };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key"));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var passwordHash = HashPassword(password);
-            return user.PasswordHash == passwordHash;
+            var token = new JwtSecurityToken(
+                issuer: "your_issuer",
+                audience: "your_audience",
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
         public async Task<bool> SignUp(UserSignUpModel model)
         {

@@ -5,11 +5,17 @@ using NoteCode.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//conexion a la base de datos
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
+//Repositorios y servicios
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+//configuracion JWT
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
 builder.Services.AddControllers();
 
 // Add services to the container.
@@ -34,6 +40,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();  // Necesario para la autenticación JWT
+app.UseAuthorization();
 
 var summaries = new[]
 {

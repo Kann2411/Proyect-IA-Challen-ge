@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NoteCode.Models;
 using NoteCode.Services;
 
 namespace NoteCode.Controllers
@@ -15,20 +16,26 @@ namespace NoteCode.Controllers
         }
 
         [HttpPost("signin")]
-        public async Task<IActionResult> SignIn(string email, string password)
+        public async Task<IActionResult> SignIn(UserSignInModel model)
         {
-            var result =  await _authService.Login(email, password);
-            if(!result) return Unauthorized("Invalid credentials");
-            return Ok("Login successful");
+            try
+            {
+                var token = await _authService.Login(model);
+                return Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] UserSignUpModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var result = await _authService.SignUp(model);
-                if(!result) return BadRequest("Email already in use");
+                if (!result) return BadRequest("Email already in use");
                 return Ok("User registered successfully");
             }
 
