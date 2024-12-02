@@ -1,7 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-public class UserSignInModel
+public class UserSignUpModel
 {
+    [Required]
+    public required string Username { get; set; }
+
     [Required]
     [EmailAddress]
     public required string Email { get; set; }
