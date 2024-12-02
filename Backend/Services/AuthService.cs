@@ -5,58 +5,33 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NoteCode.Services
 {
     public interface IAuthService
     {
+        string HashPassword(string password);
         Task<string> Login(UserSignInModel model);
         Task<bool> SignUp(UserSignUpModel model);
     }
 
-    public class AuthService : IAuthService
+    public class AuthService(IUserRepository userRepository) : IAuthService
     {
-        private readonly IUserRepository _userRepository;
-
-        public AuthService(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
         public async Task<string> Login(UserSignInModel model)
         {
-            var user = await _userRepository.GetByEmail(model.Email);
-            if (user == null)
-            {
-                throw new NotFoundException("User not found");
-            }
+            var user = await userRepository.GetByEmail(model.Email) ?? throw new NotFoundException("User not found");
             var passwordHash = HashPassword(model.Password);
-            if (passwordHash != user.PasswordHash)
-            {
-                throw new UnauthorizedAccessException("Invalid password");
-            }
-            var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim("IsAdmin", user.IsAdmin.ToString())
-        };
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(
-                issuer: "your_issuer",
-                audience: "your_audience",
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds
-            );
+            var data = JsonConvert.DeserializeObject<dynamic>(model.ToString());
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            //aqui hay que seguir!!!
+            return "Admin";
+            
         }
         public async Task<bool> SignUp(UserSignUpModel model)
         {
-            if (await _userRepository.GetByEmail(model.Email) != null)
+            if (await userRepository.GetByEmail(model.Email) != null)
                 return false;
 
             var passwordHash = HashPassword(model.Password);
@@ -67,15 +42,16 @@ namespace NoteCode.Services
                 Email = model.Email,
                 PasswordHash = passwordHash
             };
-            await _userRepository.Add(user);
+            var role = "user";
+            await userRepository.Add(user, role);
 
             return true;
         }
-        private string HashPassword(string password)
+
+        public string HashPassword(string password)
         {
-            using var sha256 = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(password);
-            var hash = sha256.ComputeHash(bytes);
+            var hash = SHA256.HashData(bytes);
             return Convert.ToBase64String(hash);
         }
     }
