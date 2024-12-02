@@ -19,6 +19,7 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.MapControllers();
+app.UseMiddleware<RoleMiddleware>();
 
 using (var scope = app.Services.CreateScope())
 {
