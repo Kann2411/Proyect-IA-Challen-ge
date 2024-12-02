@@ -1,0 +1,62 @@
+# Ignore build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# User-specific files (Windows)
+.idea/
+.vscode/
+
+# Ignore .NET Core specific files
+project.lock.json
+project.fragment.lock.json
+
+# Ignore compiled files
+*.dll
+*.exe
+*.pdb
+*.vshost.*
+*.app
+*.appref-ms
+
+# Ignore JetBrains Rider files
+.idea/
+
+# Ignore ASP.NET files
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+
+# Ignore environment variables file (add this only if you're using a .env file for secrets)
+.env
+
+# Ignore other secrets and credentials
+*.key
+*.pem
+*.crt
+*.pfx
+*.cer
+*.env
+
+# Ignore files related to VS Code and other IDEs
+.vscode/
+
+# Ignore temporary files
+Thumbs.db
+ehthumbs.db
+*.swp
+*.bak
+*.tmp
+
+# Ignore migrations if you don't want to track them (not recommended for production)
+Migrations/
+
+# Ignore database files
+*.mdf
+*.ldf
