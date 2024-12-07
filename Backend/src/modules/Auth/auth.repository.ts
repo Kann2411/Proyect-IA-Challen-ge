@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class AuthRepository {
   constructor() {}
 
-  async loginUser(email, password) {
+  async signIn(email, password) {
     console.log(email);
     console.log(password);
   }
