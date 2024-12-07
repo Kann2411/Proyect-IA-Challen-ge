@@ -1,62 +1,56 @@
-# Ignore build results
-bin/
-obj/
+# compiled output
+/dist
+/node_modules
+/build
 
-# User-specific files
-*.user
-*.userosscache
-*.suo
-*.userprefs
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
-# User-specific files (Windows)
-.idea/
-.vscode/
+# OS
+.DS_Store
 
-# Ignore .NET Core specific files
-project.lock.json
-project.fragment.lock.json
+# Tests
+/coverage
+/.nyc_output
 
-# Ignore compiled files
-*.dll
-*.exe
-*.pdb
-*.vshost.*
-*.app
-*.appref-ms
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-# Ignore JetBrains Rider files
-.idea/
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
-# Ignore ASP.NET files
-appsettings.json
-appsettings.Development.json
-appsettings.Production.json
-appsettings.Staging.json
-
-# Ignore environment variables file (add this only if you're using a .env file for secrets)
+# dotenv environment variable files
 .env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# Ignore other secrets and credentials
-*.key
-*.pem
-*.crt
-*.pfx
-*.cer
-*.env
+# temp directory
+.temp
+.tmp
 
-# Ignore files related to VS Code and other IDEs
-.vscode/
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Ignore temporary files
-Thumbs.db
-ehthumbs.db
-*.swp
-*.bak
-*.tmp
-
-# Ignore migrations if you don't want to track them (not recommended for production)
-Migrations/
-
-# Ignore database files
-*.mdf
-*.ldf
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
