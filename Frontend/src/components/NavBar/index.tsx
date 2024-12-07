@@ -50,7 +50,7 @@ export default function App() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="#" color="secondary">Iniciar Sesión</Link>
+          <Link href="login" color="secondary">Iniciar Sesión</Link>
         </NavbarItem>
         <NavbarItem>
           <Button as={Link} color="secondary" href="/register" variant="flat">

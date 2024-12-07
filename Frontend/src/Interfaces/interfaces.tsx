@@ -4,3 +4,8 @@ export interface IRegistrationFormValues {
     password: string;
     confirmPassword: string;
   }
+
+export interface ILoginFormValues {
+  username: string;
+  password: string;
+}
