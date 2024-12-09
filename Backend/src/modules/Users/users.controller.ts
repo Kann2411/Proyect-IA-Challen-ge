@@ -1,4 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
+import { UserServices } from './users.service';
 
-@Controller()
-export class UserController {}
+@Controller('users')
+export class UserController {
+  constructor(private readonly UserServices: UserServices) {}
+
+  @Get()
+  getUsers() {
+    return this.UserServices.getUsers();
+  }
+
+  @Get(':id')
+  getUserById(@Param(':id', ParseUUIDPipe) id: string) {
+    return this.UserServices.getUserById(id);
+  }
+}
