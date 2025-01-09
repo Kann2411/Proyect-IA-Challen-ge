@@ -18,6 +18,13 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async validateOAuthLogin(profile: any): Promise<{ token: string }> {
+    console.log('Hola, se ejecuto validateOuthLogin');
+    if (profile?.token) {
+      return { token: profile.token };
+    }
+  }
+
   async signIn(loginDto) {
     const { email, password } = loginDto;
     if (!email || !password) {
